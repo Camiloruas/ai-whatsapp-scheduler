@@ -11,7 +11,7 @@ const Clientes = () => {
         setLoading(true);
         try {
             let query = supabase
-                .from('clientes')
+                .from('clients')
                 .select('*')
                 .order('nome', { ascending: true });
 

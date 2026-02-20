@@ -21,21 +21,12 @@ const BookingDetails = () => {
 
                 if (error) throw error;
 
-                // Lookup reservation details
-                const { data: resData, error: resError } = await supabase
-                    .from('agenda_reservas')
-                    .select('*')
-                    .eq('slot_id', id)
-                    .maybeSingle();
-
-                // Manual lookup for client details from 'clientes' table as fallback
-                const phone = resData?.cliente_telefone || data.cliente_telefone;
                 let clients = null;
-                if (phone) {
+                if (data.client_id) {
                     const { data: clientData, error: clientError } = await supabase
-                        .from('clientes')
+                        .from('clients')
                         .select('*')
-                        .eq('telefone', phone)
+                        .eq('id', data.client_id)
                         .maybeSingle();
 
                     if (!clientError && clientData) {
@@ -43,13 +34,11 @@ const BookingDetails = () => {
                     }
                 }
 
-                // Merge into a single display object
                 const finalBooking = {
                     ...data,
-                    reserva: resData,
                     clientes: clients,
-                    display_name: resData?.nome_cliente || data.nome_cliente || clients?.nome || 'Não informado',
-                    display_phone: resData?.cliente_telefone || data.cliente_telefone || clients?.telefone || '—'
+                    display_name: clients?.nome || 'Não informado',
+                    display_phone: clients?.telefone || '—'
                 };
 
                 setBooking(finalBooking);

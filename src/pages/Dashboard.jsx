@@ -12,7 +12,7 @@ const Dashboard = () => {
     const [reservations, setReservations] = useState({});
     const [page, setPage] = useState(1);
     const navigate = useNavigate();
-    const pageSize = 10;
+    const pageSize = 50;
 
     const formatDate = (dateString) => {
         if (!dateString) return '—';
@@ -23,6 +23,18 @@ const Dashboard = () => {
     const fetchBookings = async () => {
         setLoading(true);
         try {
+            let clientIdsFromSearch = null;
+            if (searchTerm) {
+                const { data: searchClients, error: searchClientsError } = await supabase
+                    .from('clients')
+                    .select('id')
+                    .or(`telefone.ilike.%${searchTerm}%,nome.ilike.%${searchTerm}%`);
+
+                if (!searchClientsError) {
+                    clientIdsFromSearch = (searchClients || []).map((c) => c.id);
+                }
+            }
+
             let query = supabase
                 .from('agenda_slots')
                 .select('*', { count: 'exact' });
@@ -32,11 +44,15 @@ const Dashboard = () => {
             }
 
             if (searchTerm) {
-                // Search by phone or name in the slots table
-                query = query.or(`cliente_telefone.ilike.%${searchTerm}%,nome_cliente.ilike.%${searchTerm}%`);
+                if (clientIdsFromSearch && clientIdsFromSearch.length > 0) {
+                    query = query.in('client_id', clientIdsFromSearch);
+                } else {
+                    query = query.eq('id', '__no_match__');
+                }
             }
 
             const { data, count, error } = await query
+                .order('client_id', { ascending: false, nullsFirst: false })
                 .order('data', { ascending: true })
                 .order('hora_inicio', { ascending: true })
                 .range((page - 1) * pageSize, page * pageSize - 1);
@@ -44,62 +60,30 @@ const Dashboard = () => {
             if (error) throw error;
             const slotsData = data || [];
 
-            // 1. Fetch relevant reservations from agenda_reservas
-            const slotIds = slotsData.map(b => b.id);
-            let resMap = {};
-            let currentReservations = [];
-            if (slotIds.length > 0) {
-                const { data: resData, error: resError } = await supabase
-                    .from('agenda_reservas')
-                    .select('slot_id, nome_cliente, cliente_telefone')
-                    .in('slot_id', slotIds);
-
-                if (!resError && resData) {
-                    currentReservations = resData;
-                    resData.forEach(r => {
-                        resMap[r.slot_id] = r;
-                    });
-                }
-            }
-
-            // 2. Fetch client names from 'clientes' table as fallback
-            const phones = [...new Set(slotsData.map(b => b.cliente_telefone).filter(p => p))];
-
-            // Also include phones from newly fetched reservations
-            const resPhones = [...new Set(currentReservations.map(r => r.cliente_telefone).filter(p => p))];
-            const allPhones = [...new Set([...phones, ...resPhones])];
-
-            let namesMap = {};
-            if (allPhones.length > 0) {
+            const clientIds = [...new Set(slotsData.map((b) => b.client_id).filter((id) => id))];
+            let clientsMap = {};
+            if (clientIds.length > 0) {
                 const { data: clientsData, error: clientsError } = await supabase
-                    .from('clientes')
-                    .select('nome, telefone')
-                    .in('telefone', allPhones);
+                    .from('clients')
+                    .select('id, nome, telefone')
+                    .in('id', clientIds);
 
                 if (!clientsError && clientsData) {
-                    clientsData.forEach(c => {
-                        namesMap[c.telefone] = c.nome;
+                    clientsData.forEach((c) => {
+                        clientsMap[c.id] = c;
                     });
                 }
             }
 
-            // 3. Merge everything into a final bookings array
-            const finalBookings = slotsData.map(slot => ({
+            const finalBookings = slotsData.map((slot) => ({
                 ...slot,
-                // Prioritize reservation data
-                display_name: resMap[slot.id]?.nome_cliente ||
-                    slot.nome_cliente ||
-                    namesMap[resMap[slot.id]?.cliente_telefone] ||
-                    namesMap[slot.cliente_telefone] ||
-                    '—',
-                display_phone: resMap[slot.id]?.cliente_telefone ||
-                    slot.cliente_telefone ||
-                    '—'
+                display_name: clientsMap[slot.client_id]?.nome || '—',
+                display_phone: clientsMap[slot.client_id]?.telefone || '—'
             }));
 
             setBookings(finalBookings);
-            setClientNames(namesMap);
-            setReservations(resMap);
+            setClientNames(clientsMap);
+            setReservations({});
         } catch (error) {
             console.error('Error fetching bookings:', error);
         } finally {
