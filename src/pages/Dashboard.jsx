@@ -52,7 +52,6 @@ const Dashboard = () => {
             }
 
             const { data, count, error } = await query
-                .order('client_id', { ascending: false, nullsFirst: false })
                 .order('data', { ascending: true })
                 .order('hora_inicio', { ascending: true })
                 .range((page - 1) * pageSize, page * pageSize - 1);
@@ -110,9 +109,7 @@ const Dashboard = () => {
     const getStatusClass = (status) => {
         switch (status) {
             case 'DISPONIVEL': return 'status-available';
-            case 'RESERVADO': return 'status-reserved';
-            case 'CONFIRMADO': return 'status-confirmed';
-            case 'CANCELADO': return 'status-cancelled';
+            case 'OCUPADO': return 'status-reserved';
             default: return '';
         }
     };
@@ -145,9 +142,7 @@ const Dashboard = () => {
                     <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                         <option value="ALL">Todos os Horários</option>
                         <option value="DISPONIVEL">Apenas Disponíveis</option>
-                        <option value="RESERVADO">Apenas Reservados</option>
-                        <option value="CONFIRMADO">Confirmados</option>
-                        <option value="CANCELADO">Cancelados</option>
+                        <option value="OCUPADO">Apenas Ocupados</option>
                     </select>
                 </div>
             </section>
