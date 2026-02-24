@@ -82,8 +82,8 @@ const BookingDetails = () => {
 
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'CONFIRMADO': return <CheckCircle size={24} color="var(--success)" />;
-            case 'CANCELADO': return <XCircle size={24} color="var(--danger)" />;
+            case 'OCUPADO': return <CheckCircle size={24} color="var(--success)" />;
+            case 'DISPONIVEL': return <Info size={24} color="var(--primary)" />;
             default: return <Info size={24} color="var(--primary)" />;
         }
     };
