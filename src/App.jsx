@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import BookingDetails from './pages/BookingDetails';
 import Clientes from './pages/Clientes';
+import Configuracoes from './pages/Configuracoes';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -37,7 +38,7 @@ function App() {
           <Route path="/agendamentos" element={<Dashboard />} />
           <Route path="/agendamento/:id" element={<BookingDetails />} />
           <Route path="/clientes" element={<Clientes />} />
-          <Route path="/configuracoes" element={<div>Configurações (Em breve)</div>} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
