@@ -7,13 +7,13 @@ This project consists of an automated scheduling agent and a management dashboar
 ## Project Preview / Demonstração do Projeto
 
 ### n8n Agent Workflow
-![n8n Workflow](/home/camilo/.gemini/antigravity/brain/eec65c26-1432-4495-9391-3310ed09f34f/media__1772225639659.png)
+![n8n Workflow](./public/assets/n8n_workflow.png)
 
 ### Management Dashboard
-![Dashboard Screenshot](/home/camilo/.gemini/antigravity/brain/eec65c26-1432-4495-9391-3310ed09f34f/media__1772225623171.png)
+![Dashboard Screenshot](./public/assets/dashboard_screenshot.png)
 
 ### Video Demonstration
-[Watch the system in action on YouTube](https://www.youtube.com/watch?v=cJuNsApUAdc)
+[Watch the system in action on YouTube](https://youtu.be/my2K4YxFeAI)
 
 ---
 
