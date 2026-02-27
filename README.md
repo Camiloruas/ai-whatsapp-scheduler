@@ -1,83 +1,84 @@
 # AI WhatsApp Scheduler
 
-Production ready WhatsApp AI appointment scheduling system built with n8n, Supabase, and a conversational AI model. It integrates with your dashboard for visibility, monitoring, and operational control.
+Bilingual project documentation for a full stack appointment scheduling system powered by Artificial Intelligence and integrated with WhatsApp.
+
+This project consists of an automated scheduling agent and a management dashboard, combining automation with n8n, database management with Supabase, and a modern interface in React.
+
+## Project Preview / Demonstração do Projeto
+
+### n8n Agent Workflow
+![n8n Workflow](/home/camilo/.gemini/antigravity/brain/eec65c26-1432-4495-9391-3310ed09f34f/media__1772225639659.png)
+
+### Management Dashboard
+![Dashboard Screenshot](/home/camilo/.gemini/antigravity/brain/eec65c26-1432-4495-9391-3310ed09f34f/media__1772225623171.png)
+
+### Video Demonstration
+[Watch the system in action on YouTube](https://www.youtube.com/watch?v=cJuNsApUAdc)
+
+---
 
 ## English
 
-### Overview
-Event driven workflow that receives WhatsApp messages via Evolution API webhook, registers clients, checks availability, and confirms bookings with natural language.
+### Project Overview
+The AI WhatsApp Scheduler is a production ready solution for businesses that need to automate appointment bookings. It uses natural language processing to understand customer requests via WhatsApp, managing the database in real time and providing an administrative interface for monitoring.
 
-### Flow Summary
-1. Webhook message received
-2. Validation ignores group and self messages
-3. Client lookup and registration
-4. AI intent classification and date time extraction
-5. Availability check and slot reservation
-6. Confirmation response
+### Key Features
+1. Conversational AI Agent: Responds to customers on WhatsApp to book, list, or cancel appointments.
+2. Automated Slot Management: Daily engine that generates available time slots based on configurable business hours.
+3. Administrative Dashboard: Real time React interface to manage clients, monitor bookings, and adjust settings.
+4. Intelligent Validation: Filters for audio and image messages, requesting text for better processing.
+5. Client Registration: Automatically identifies and registers new clients during the first interaction.
 
 ### Architecture
-1. n8n self hosted workflow orchestration
-2. Supabase PostgreSQL with tables clients and agenda_slots
-3. Database constraints prevent duplicate clients and duplicate slots
-4. Slot generation workflow for weekdays, 08:00 to 12:00 and 14:00 to 18:00
-
-### AI Layer
-Structured JSON output for deterministic routing, with intent classification, date normalization, and time normalization.
-
-### Dashboard Integration
-The dashboard is the operational view of the system, exposing client records, slot availability, and booking status so teams can monitor and manage the flow.
+1. n8n (Orchestration): Manages the logic flow between WhatsApp, AI, and the database.
+2. Evolution API: Connects the WhatsApp instance to the n8n webhooks.
+3. Supabase (Backend): PostgreSQL database with real time subscriptions and built in authentication.
+4. OpenAI: Language model used for intent classification and deterministic tool calling.
 
 ### Tech Stack
-1. n8n
-2. Supabase PostgreSQL
-3. WhatsApp API via Evolution API
-4. OpenAI or LLM for intent recognition
-5. Node.js runtime
+1. Frontend: React 19, Vite, Lucide React, Supabase JS.
+2. Backend and Automation: n8n, Evolution API, OpenAI.
+3. Database: PostgreSQL (via Supabase).
 
-### Future Improvements
-1. Multi location support
-2. Multi employee scheduling
-3. Google Calendar integration
-4. Slot auto expiration
-5. Payment integration
-6. Multi language support
+### Installation and Setup
+1. Database: Execute the SQL schema in Supabase to create the clients, agenda_slots, and agenda_config tables.
+2. n8n Workflows: Import the agenda_engine and Agente de Agendamento workflows into your n8n instance.
+3. WhatsApp: Connect your WhatsApp instance via Evolution API and point the webhook to the n8n entry point.
+4. Dashboard: Configure the environment variables with your Supabase credentials and run npm install followed by npm run dev.
+
+***
 
 ## Portugues
 
-### Visao Geral
-Fluxo orientado a eventos que recebe mensagens do WhatsApp via webhook da Evolution API, cadastra clientes, verifica disponibilidade e confirma agendamentos com linguagem natural.
+### Visao Geral do Projeto
+O AI WhatsApp Scheduler e uma solucao pronta para producao destinada a empresas que precisam automatizar o agendamento de consultas. Ele utiliza processamento de linguagem natural para entender os pedidos dos clientes via WhatsApp, gerenciando o banco de dados em tempo real e fornecendo uma interface administrativa para monitoramento.
 
-### Resumo do Fluxo
-1. Mensagem recebida pelo webhook
-2. Validacao ignora grupos e mensagens do proprio numero
-3. Busca e cadastro do cliente
-4. Classificacao de intencao e extracao de data e horario
-5. Checagem de disponibilidade e reserva do horario
-6. Resposta de confirmacao
+### Principais Recursos
+1. Agente de IA Conversacional: Responde aos clientes no WhatsApp para agendar, listar ou cancelar compromissos.
+2. Gerenciamento Automatico de Vagas: Motor diario que gera slots de horario disponiveis com base em horas comerciais configuraveis.
+3. Painel Administrativo: Interface React em tempo real para gerenciar clientes, monitorar reservas e ajustar configuracoes.
+4. Validacao Inteligente: Filtros para mensagens de audio e imagem, solicitando texto para melhor processamento.
+5. Cadastro de Clientes: Identifica e cadastra automaticamente novos clientes durante a primeira interacao.
 
 ### Arquitetura
-1. n8n auto hospedado para orquestracao
-2. Supabase PostgreSQL com tabelas clients e agenda_slots
-3. Restricoes no banco evitam duplicidade de clientes e horarios
-4. Geracao de slots em dias uteis, 08:00 a 12:00 e 14:00 a 18:00
-
-### Camada de IA
-Saida em JSON estruturado para roteamento deterministico, com classificacao de intencao, normalizacao de datas e de horarios.
-
-### Integracao com Dashboard
-O dashboard e a visao operacional do sistema, mostrando clientes, disponibilidade de slots e status dos agendamentos para monitorar e gerenciar o fluxo.
+1. n8n (Orquestracao): Gerencia o fluxo de logica entre o WhatsApp, a IA e o banco de dados.
+2. Evolution API: Conecta a instancia do WhatsApp aos webhooks do n8n.
+3. Supabase (Backend): Banco de dados PostgreSQL com inscricoes em tempo real e autenticacao integrada.
+4. OpenAI: Modelo de linguagem utilizado para classificacao de intencao e chamada deterministica de ferramentas.
 
 ### Stack Tecnologica
-1. n8n
-2. Supabase PostgreSQL
-3. WhatsApp API via Evolution API
-4. OpenAI ou LLM para reconhecimento de intencao
-5. Ambiente Node.js
+1. Frontend: React 19, Vite, Lucide React, Supabase JS.
+2. Backend e Automacao: n8n, Evolution API, OpenAI.
+3. Banco de Dados: PostgreSQL (via Supabase).
 
-### Melhorias Futuras
-1. Suporte a multiplas unidades
-2. Agenda para varios profissionais
-3. Integracao com Google Calendar
-4. Expiracao automatica de slots
-5. Integracao com pagamentos
-6. Suporte a varios idiomas
+### Instalacao e Configuracao
+1. Banco de Dados: Execute o esquema SQL no Supabase para criar as tabelas clients, agenda_slots e agenda_config.
+2. Fluxos n8n: Importe os fluxos agenda_engine e Agente de Agendamento para sua instancia do n8n.
+3. WhatsApp: Conecte sua instancia do WhatsApp via Evolution API e aponte o webhook para o ponto de entrada do n8n.
+
+4. Dashboard: Configure as variaveis de ambiente com suas credenciais do Supabase e execute npm install seguido de npm run dev.
+
+***
+
+### Desenvolvido por / Developed by
+Camilo Ruas
